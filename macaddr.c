@@ -6,15 +6,28 @@
 
 char rule[256];
 
-void updateRejectRule(char *username, char *macAddr){
+void updateRejectRule(char *username, char *macAddr, char *saTimeStart, char *saTimeEnd){
     /* delete existing mac address reject rule, if any */
     sprintf(rule, "iptables -D FORWARD -m mac --mac-source %s -j REJECT", macAddr);
     printf("%s\n", rule);
     printf("result: %d\n", system(rule));
-    /* insert a new mac address reject rule at the top */
-    sprintf(rule, "iptables -I FORWARD -m mac --mac-source %s -j REJECT", macAddr);
-    printf("%s\n", rule);
-    printf("result: %d\n", system(rule));
+
+    if (saTimeStart && saTimeEnd){
+        /* delete existing special access mac address rule, if any */
+        sprintf(rule, "iptables -D FORWARD -m mac --mac-source %s -m time --timestart %s --timestop %s -j REJECT", macAddr, saTimeEnd, saTimeStart);
+        printf("%s\n", rule);
+        printf("result: %d\n", system(rule));
+        /* insert a new special access mac address reject rule at the top */
+        sprintf(rule, "iptables -I FORWARD -m mac --mac-source %s -m time --timestart %s --timestop %s -j REJECT", macAddr, saTimeEnd, saTimeStart);
+        printf("%s\n", rule);
+        printf("result: %d\n", system(rule));
+    } else {
+        /* insert a new mac address reject rule at the top */
+        sprintf(rule, "iptables -I FORWARD -m mac --mac-source %s -j REJECT", macAddr);
+        printf("%s\n", rule);
+        printf("result: %d\n", system(rule));
+    }
+
     /* delete legacy localhost drop rule, if any */
     sprintf(rule, "iptables -D OUTPUT -m owner --uid-owner %s -j DROP", username);
     printf("%s\n", rule);
@@ -23,10 +36,21 @@ void updateRejectRule(char *username, char *macAddr){
     sprintf(rule, "iptables -D OUTPUT -m owner --uid-owner %s -j REJECT", username);
     printf("%s\n", rule);
     printf("result: %d\n", system(rule));
-    /* append a new localhost reject rule at the end */
-    sprintf(rule, "iptables -A OUTPUT -m owner --uid-owner %s -j REJECT", username);
-    printf("%s\n", rule);
-    printf("result: %d\n", system(rule));
+    if (saTimeStart && saTimeEnd){
+        /* delete existing special access localhost reject rule, if any */
+        sprintf(rule, "iptables -D OUTPUT -m owner --uid-owner %s -m time --timestart %s --timestop %s -j REJECT", username, saTimeEnd, saTimeStart);
+        printf("%s\n", rule);
+        printf("result: %d\n", system(rule));
+        /* append a new special access localhost reject rule at the end */
+        sprintf(rule, "iptables -A OUTPUT -m owner --uid-owner %s -m time --timestart %s --timestop %s -j REJECT", username, saTimeEnd, saTimeStart);
+        printf("%s\n", rule);
+        printf("result: %d\n", system(rule));
+    } else {
+        /* append a new localhost reject rule at the end */
+        sprintf(rule, "iptables -A OUTPUT -m owner --uid-owner %s -j REJECT", username);
+        printf("%s\n", rule);
+        printf("result: %d\n", system(rule));
+    }
 }
 
 int insertAcceptRule(char *username, char *macAddr, char *dateTime){
@@ -83,13 +107,16 @@ int main(int argc, char *argv[]){
 	if (argc >= 2) {
 		char *command = argv[1];
 		if (strcmp(command, "--help") == 0) {
-			printf("usage: %s (on|off) username mac_address [expiry_time]\n", argv[0]);
+			printf("usage: %s (on|off) username mac_address [expiry_time [-sa special_access_time_start special_access_time_end]]\n", argv[0]);
 		} else if (argc >= 4) {
 			setuid(0);
 			char *username = argv[2];
 			char *macAddr = argv[3];
-			char *dateTime = argc >= 5 ? argv[4] : NULL;
-			updateRejectRule(username, macAddr);
+			char *dateTime = (argc >= 5 ? argv[4] : NULL);
+			int specialAccess = (argc >= 8 ? (strcmp(argv[5], "-sa") == 0) : 0);
+			char *saTimeStart = (specialAccess ? argv[6] : NULL);
+			char *saTimeEnd = (specialAccess ? argv[7] : NULL);
+			updateRejectRule(username, macAddr, saTimeStart, saTimeEnd);
 			if (strcmp(command, "on") == 0) {
 			    deleteAcceptRule(username, macAddr, dateTime); /* delete old rule, just in case */
 			    rc = insertAcceptRule(username, macAddr, dateTime);
