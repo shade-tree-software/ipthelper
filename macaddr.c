@@ -29,6 +29,16 @@ void updateRejectRule(char *username, char *macAddr){
     printf("result: %d\n", system(rule));
 }
 
+int moveLANAccessRuleToTop(){
+    /* move to the top the rule that allows local wireless ips to hit local wired ips */
+    sprintf(rule, "iptables -D FORWARD -s 10.42.0.0./24 -d 192.168.1.0/24 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+    sprintf(rule, "iptables -I FORWARD -s 10.42.0.0./24 -d 192.168.1.0/24 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+}
+
 int insertAcceptRule(char *username, char *macAddr, char *dateTime){
     /* insert new mac address accept rule above all other rules */
     if (dateTime) {
@@ -96,6 +106,7 @@ int main(int argc, char *argv[]){
 			} else if (strcmp(command, "off") == 0) {
 			    rc = deleteAcceptRule(username, macAddr, dateTime);
 			}
+            moveLANAccessRuleToTop();
 		}
 	} else {
 		printf("Invalid number of arguments (%d for 2)\n", argc);
