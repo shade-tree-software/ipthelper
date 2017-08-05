@@ -30,11 +30,23 @@ void updateRejectRule(char *username, char *macAddr){
 }
 
 int moveLANAccessRuleToTop(){
-    /* move to the top the rule that allows local wireless ips to hit local wired ips */
-    sprintf(rule, "iptables -D FORWARD -s 10.42.0.0./24 -d 192.168.1.0/24 -j ACCEPT");
+    /* move to the top the rules that allow local lans to access each other */
+    sprintf(rule, "iptables -D FORWARD -d 192.168.1.0/24 -j ACCEPT");
     printf("%s\n", rule);
     printf("result: %d\n", system(rule));
-    sprintf(rule, "iptables -I FORWARD -s 10.42.0.0./24 -d 192.168.1.0/24 -j ACCEPT");
+    sprintf(rule, "iptables -I FORWARD -d 192.168.1.0/24 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+    sprintf(rule, "iptables -D FORWARD -d 10.42.0.0/24 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+    sprintf(rule, "iptables -I FORWARD -d 10.42.0.0/24 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+    sprintf(rule, "iptables -D FORWARD -d 10.42.1.0/24 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+    sprintf(rule, "iptables -I FORWARD -d 10.42.1.0/24 -j ACCEPT");
     printf("%s\n", rule);
     printf("result: %d\n", system(rule));
 }
