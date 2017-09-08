@@ -51,6 +51,46 @@ int moveLANAccessRuleToTop(){
     printf("result: %d\n", system(rule));
 }
 
+int moveSpotifyAccessRuleToTop(){
+    /* move to the top the rules that allow access to spotify */
+    sprintf(rule, "iptables -D FORWARD -d 193.235.206.0/24 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+    sprintf(rule, "iptables -I FORWARD -d 193.235.206.0/24 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+    sprintf(rule, "iptables -D FORWARD -d 193.235.203.0/24 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+    sprintf(rule, "iptables -I FORWARD -d 193.235.203.0/24 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+    sprintf(rule, "iptables -D FORWARD -d 193.235.32.0/24 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+    sprintf(rule, "iptables -I FORWARD -d 193.235.32.0/24 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+    sprintf(rule, "iptables -D FORWARD -d 194.68.28.0/22 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+    sprintf(rule, "iptables -I FORWARD -d 194.68.28.0/22 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+    sprintf(rule, "iptables -D FORWARD -d 193.182.8.0/21 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+    sprintf(rule, "iptables -I FORWARD -d 193.182.8.0/21 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+    sprintf(rule, "iptables -D FORWARD -d 78.31.8.0/21 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+    sprintf(rule, "iptables -I FORWARD -d 78.31.8.0/21 -j ACCEPT");
+    printf("%s\n", rule);
+    printf("result: %d\n", system(rule));
+}
+
 int insertAcceptRule(char *username, char *macAddr, char *dateTime){
     /* insert new mac address accept rule above all other rules */
     if (dateTime) {
@@ -119,6 +159,7 @@ int main(int argc, char *argv[]){
 			    rc = deleteAcceptRule(username, macAddr, dateTime);
 			}
             moveLANAccessRuleToTop();
+            moveSpotifyAccessRuleToTop();
 		}
 	} else {
 		printf("Invalid number of arguments (%d for 2)\n", argc);
