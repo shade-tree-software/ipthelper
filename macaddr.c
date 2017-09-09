@@ -53,40 +53,40 @@ int moveLANAccessRuleToTop(){
 
 int moveSpotifyAccessRuleToTop(){
     /* move to the top the rules that allow access to spotify */
-    sprintf(rule, "iptables -D FORWARD -d 193.235.206.0/24 -j ACCEPT");
+    sprintf(rule, "iptables -D FORWARD -d 193.235.206.0/24 -j ACCEPT -m time --timestart 06:00 --timestop 21:30 --kerneltz");
     printf("%s\n", rule);
     printf("result: %d\n", system(rule));
-    sprintf(rule, "iptables -I FORWARD -d 193.235.206.0/24 -j ACCEPT");
+    sprintf(rule, "iptables -I FORWARD -d 193.235.206.0/24 -j ACCEPT -m time --timestart 06:00 --timestop 21:30 --kerneltz");
     printf("%s\n", rule);
     printf("result: %d\n", system(rule));
-    sprintf(rule, "iptables -D FORWARD -d 193.235.203.0/24 -j ACCEPT");
+    sprintf(rule, "iptables -D FORWARD -d 193.235.203.0/24 -j ACCEPT -m time --timestart 06:00 --timestop 21:30 --kerneltz");
     printf("%s\n", rule);
     printf("result: %d\n", system(rule));
-    sprintf(rule, "iptables -I FORWARD -d 193.235.203.0/24 -j ACCEPT");
+    sprintf(rule, "iptables -I FORWARD -d 193.235.203.0/24 -j ACCEPT -m time --timestart 06:00 --timestop 21:30 --kerneltz");
     printf("%s\n", rule);
     printf("result: %d\n", system(rule));
-    sprintf(rule, "iptables -D FORWARD -d 193.235.32.0/24 -j ACCEPT");
+    sprintf(rule, "iptables -D FORWARD -d 193.235.32.0/24 -j ACCEPT -m time --timestart 06:00 --timestop 21:30 --kerneltz");
     printf("%s\n", rule);
     printf("result: %d\n", system(rule));
-    sprintf(rule, "iptables -I FORWARD -d 193.235.32.0/24 -j ACCEPT");
+    sprintf(rule, "iptables -I FORWARD -d 193.235.32.0/24 -j ACCEPT -m time --timestart 06:00 --timestop 21:30 --kerneltz");
     printf("%s\n", rule);
     printf("result: %d\n", system(rule));
-    sprintf(rule, "iptables -D FORWARD -d 194.68.28.0/22 -j ACCEPT");
+    sprintf(rule, "iptables -D FORWARD -d 194.68.28.0/22 -j ACCEPT -m time --timestart 06:00 --timestop 21:30 --kerneltz");
     printf("%s\n", rule);
     printf("result: %d\n", system(rule));
-    sprintf(rule, "iptables -I FORWARD -d 194.68.28.0/22 -j ACCEPT");
+    sprintf(rule, "iptables -I FORWARD -d 194.68.28.0/22 -j ACCEPT -m time --timestart 06:00 --timestop 21:30 --kerneltz");
     printf("%s\n", rule);
     printf("result: %d\n", system(rule));
-    sprintf(rule, "iptables -D FORWARD -d 193.182.8.0/21 -j ACCEPT");
+    sprintf(rule, "iptables -D FORWARD -d 193.182.8.0/21 -j ACCEPT -m time --timestart 06:00 --timestop 21:30 --kerneltz");
     printf("%s\n", rule);
     printf("result: %d\n", system(rule));
-    sprintf(rule, "iptables -I FORWARD -d 193.182.8.0/21 -j ACCEPT");
+    sprintf(rule, "iptables -I FORWARD -d 193.182.8.0/21 -j ACCEPT -m time --timestart 06:00 --timestop 21:30 --kerneltz");
     printf("%s\n", rule);
     printf("result: %d\n", system(rule));
-    sprintf(rule, "iptables -D FORWARD -d 78.31.8.0/21 -j ACCEPT");
+    sprintf(rule, "iptables -D FORWARD -d 78.31.8.0/21 -j ACCEPT -m time --timestart 06:00 --timestop 21:30 --kerneltz");
     printf("%s\n", rule);
     printf("result: %d\n", system(rule));
-    sprintf(rule, "iptables -I FORWARD -d 78.31.8.0/21 -j ACCEPT");
+    sprintf(rule, "iptables -I FORWARD -d 78.31.8.0/21 -j ACCEPT -m time --timestart 06:00 --timestop 21:30 --kerneltz");
     printf("%s\n", rule);
     printf("result: %d\n", system(rule));
 }
